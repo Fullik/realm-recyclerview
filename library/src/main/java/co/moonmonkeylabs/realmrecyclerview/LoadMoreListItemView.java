@@ -1,6 +1,8 @@
 package co.moonmonkeylabs.realmrecyclerview;
 
 import android.content.Context;
+import android.support.annotation.IdRes;
+import android.support.annotation.LayoutRes;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +17,9 @@ public class LoadMoreListItemView extends FrameLayout {
 
     ProgressBar spinner;
 
-    public LoadMoreListItemView(Context context) {
+    public LoadMoreListItemView(Context context, @LayoutRes int layoutId) {
         super(context);
-        inflate(context, R.layout.load_more_item_view, this);
+        inflate(context, layoutId == -1 ? R.layout.load_more_item_view : layoutId, this);
 
         loadingText = (TextView) findViewById(R.id.load_more_view_text);
         spinner = (ProgressBar) findViewById(R.id.load_more_spinner);

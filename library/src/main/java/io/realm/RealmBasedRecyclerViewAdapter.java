@@ -18,6 +18,7 @@
 package io.realm;
 
 import android.content.Context;
+import android.support.annotation.LayoutRes;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -98,6 +99,7 @@ public abstract class RealmBasedRecyclerViewAdapter
     private RealmFieldType animatePrimaryIdType;
     private long animateExtraColumnIndex;
     private RealmFieldType animateExtraIdType;
+    private int loadMoreLayoutId = -1;
 
     public RealmBasedRecyclerViewAdapter(
             Context context,
@@ -245,7 +247,7 @@ public abstract class RealmBasedRecyclerViewAdapter
         if (viewType == HEADER_VIEW_TYPE) {
             return onCreateHeaderViewHolder(viewGroup);
         } else if (viewType == LOAD_MORE_VIEW_TYPE) {
-            return new RealmViewHolder(new LoadMoreListItemView(viewGroup.getContext()));
+            return new RealmViewHolder(new LoadMoreListItemView(viewGroup.getContext(), loadMoreLayoutId));
         } else if (viewType == FOOTER_VIEW_TYPE) {
             return onCreateFooterViewHolder(viewGroup);
         }
@@ -558,6 +560,10 @@ public abstract class RealmBasedRecyclerViewAdapter
                 }
             }
         };
+    }
+
+    public void setLoadMoreLayoutId(@LayoutRes int layoutId) {
+        loadMoreLayoutId = layoutId;
     }
 
     /**

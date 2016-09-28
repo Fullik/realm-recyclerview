@@ -214,10 +214,15 @@ public class RealmRecyclerView extends FrameLayout {
         ((RealmBasedRecyclerViewAdapter) recyclerView.getAdapter()).removeLoadMore();
     }
 
+    public void removeLoadMore() {
+        ((RealmBasedRecyclerViewAdapter) recyclerView.getAdapter()).removeLoadMore();
+    }
+
+    public void addLoadMore() {
+        ((RealmBasedRecyclerViewAdapter) recyclerView.getAdapter()).addLoadMore();
+    }
+
     private void maybeFireLoadMore() {
-        if (hasLoadMoreFired) {
-            return;
-        }
         if (!showShowLoadMore) {
             return;
         }

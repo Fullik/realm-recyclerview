@@ -43,7 +43,7 @@ public class RealmRecyclerView extends FrameLayout {
     private RealmBasedRecyclerViewAdapter adapter;
     private RealmSimpleItemTouchHelperCallback realmSimpleItemTouchHelperCallback;
     private boolean hasLoadMoreFired;
-    private boolean showShowLoadMore;
+    private boolean showShowLoadMore = true;
 
     // Attributes
     private boolean isRefreshable;
@@ -206,12 +206,10 @@ public class RealmRecyclerView extends FrameLayout {
 
     public void enableShowLoadMore() {
         showShowLoadMore = true;
-        ((RealmBasedRecyclerViewAdapter) recyclerView.getAdapter()).addLoadMore();
     }
 
     public void disableShowLoadMore() {
         showShowLoadMore = false;
-        ((RealmBasedRecyclerViewAdapter) recyclerView.getAdapter()).removeLoadMore();
     }
 
     public void removeLoadMore() {
@@ -238,7 +236,8 @@ public class RealmRecyclerView extends FrameLayout {
 
         if (firstVisibleItemPosition + visibleItemCount + bufferItems > totalItemCount) {
             if (onLoadMoreListener != null) {
-                hasLoadMoreFired = true;
+                showShowLoadMore = false;
+                addLoadMore();
                 onLoadMoreListener.onLoadMore(adapter.getLastItem());
             }
         }

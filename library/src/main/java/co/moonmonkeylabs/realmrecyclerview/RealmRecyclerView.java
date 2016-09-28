@@ -2,6 +2,7 @@ package co.moonmonkeylabs.realmrecyclerview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.annotation.ColorInt;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -167,7 +168,8 @@ public class RealmRecyclerView extends FrameLayout {
 
                     @Override
                     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                        maybeFireLoadMore();
+                        if (dy > 0)
+                            maybeFireLoadMore();
                     }
                 }
         );
@@ -200,6 +202,10 @@ public class RealmRecyclerView extends FrameLayout {
                 "SwipeToDelete not supported with this layout type: " + type.name());
     }
 
+    public void setSwipeRefreshLayoutColors(@ColorInt int... colors) {
+        swipeRefreshLayout.setColorSchemeColors(colors);
+    }
+
     public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener) {
         this.onLoadMoreListener = onLoadMoreListener;
     }
@@ -210,6 +216,10 @@ public class RealmRecyclerView extends FrameLayout {
 
     public void disableShowLoadMore() {
         showShowLoadMore = false;
+    }
+
+    public void removeLoadMoreAnimated() {
+        ((RealmBasedRecyclerViewAdapter) recyclerView.getAdapter()).removeLoadMoreAnimated();
     }
 
     public void removeLoadMore() {

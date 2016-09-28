@@ -588,6 +588,14 @@ public abstract class RealmBasedRecyclerViewAdapter
         notifyDataSetChanged();
     }
 
+    public void removeLoadMoreAnimated() {
+        if (loadMoreItem == null) {
+            return;
+        }
+        loadMoreItem = null;
+        notifyItemRemoved(getItemCount());
+    }
+
     /**
      * Adds the Footer item.
      */

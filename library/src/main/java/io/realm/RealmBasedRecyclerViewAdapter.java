@@ -18,6 +18,7 @@
 package io.realm;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.annotation.LayoutRes;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -78,6 +79,20 @@ public abstract class RealmBasedRecyclerViewAdapter
 
     private Object loadMoreItem;
     private Object footerItem;
+    private boolean needToRemoveLoadMore;
+    private boolean needToAddLoadMore;
+    private Runnable addLoadMoreRunnable = new Runnable() {
+        @Override
+        public void run() {
+            addLoadMore();
+        }
+    };
+    private Runnable removeLoadMoreRunnable = new Runnable() {
+        @Override
+        public void run() {
+            removeLoadMoreAnimated();
+        }
+    };
 
     protected final int HEADER_VIEW_TYPE = 100;
     private final int LOAD_MORE_VIEW_TYPE = 101;
@@ -558,6 +573,7 @@ public abstract class RealmBasedRecyclerViewAdapter
                     notifyDataSetChanged();
                     ids = getIdsOfRealmResults();
                 }
+                //removeOrAddLoadMoreHandle();
             }
         };
     }
@@ -574,7 +590,12 @@ public abstract class RealmBasedRecyclerViewAdapter
             return;
         }
         loadMoreItem = new Object();
-        notifyDataSetChanged();
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                notifyDataSetChanged();
+            }
+        });
     }
 
     /**
@@ -593,7 +614,21 @@ public abstract class RealmBasedRecyclerViewAdapter
             return;
         }
         loadMoreItem = null;
-        notifyItemRemoved(getItemCount());
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                notifyItemRemoved(getItemCount());
+            }
+        });
+    }
+
+    public void removeOrAddLoadMoreHandle() {
+        if (needToAddLoadMore)
+            new Handler().post(addLoadMoreRunnable);
+        else if(needToRemoveLoadMore)
+            new Handler().post(removeLoadMoreRunnable);
+        needToRemoveLoadMore = false;
+        needToAddLoadMore = false;
     }
 
     /**

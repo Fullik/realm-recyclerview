@@ -244,10 +244,13 @@ public class RealmRecyclerView extends FrameLayout {
             return;
         }
 
+        if (firstVisibleItemPosition + visibleItemCount >= totalItemCount) {
+            addLoadMore();
+        }
+
         if (firstVisibleItemPosition + visibleItemCount + bufferItems > totalItemCount) {
             if (onLoadMoreListener != null) {
                 showShowLoadMore = false;
-                addLoadMore();
                 onLoadMoreListener.onLoadMore(adapter.getLastItem());
             }
         }

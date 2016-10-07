@@ -590,12 +590,12 @@ public abstract class RealmBasedRecyclerViewAdapter
             return;
         }
         loadMoreItem = new Object();
-        new Handler().post(new Runnable() {
+        new Handler().postAtTime(new Runnable() {
             @Override
             public void run() {
                 notifyDataSetChanged();
             }
-        });
+        }, 100);
     }
 
     /**
@@ -606,7 +606,13 @@ public abstract class RealmBasedRecyclerViewAdapter
             return;
         }
         loadMoreItem = null;
-        notifyDataSetChanged();
+        new Handler().postAtTime(new Runnable() {
+            @Override
+            public void run() {
+                notifyDataSetChanged();
+            }
+        }, 100);
+        //notifyDataSetChanged();
     }
 
     public void removeLoadMoreAnimated() {
@@ -614,12 +620,13 @@ public abstract class RealmBasedRecyclerViewAdapter
             return;
         }
         loadMoreItem = null;
-        new Handler().post(new Runnable() {
+        //Small delay to prevent Inconsistency error
+        new Handler().postAtTime(new Runnable() {
             @Override
             public void run() {
                 notifyItemRemoved(getItemCount());
             }
-        });
+        }, 100);
     }
 
     public void removeOrAddLoadMoreHandle() {

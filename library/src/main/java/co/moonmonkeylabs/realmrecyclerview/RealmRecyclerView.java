@@ -219,6 +219,7 @@ public class RealmRecyclerView extends FrameLayout {
     }
 
     public void removeLoadMoreAnimated() {
+        swipeRefreshLayout.setCanSwipeBottom(false);
         ((RealmBasedRecyclerViewAdapter) recyclerView.getAdapter()).removeLoadMoreAnimated();
         disableShowLoadMore();
     }
@@ -228,6 +229,7 @@ public class RealmRecyclerView extends FrameLayout {
     }
 
     public void addLoadMore() {
+        swipeRefreshLayout.setCanSwipeBottom(true);
         ((RealmBasedRecyclerViewAdapter) recyclerView.getAdapter()).addLoadMore();
     }
 
@@ -243,10 +245,6 @@ public class RealmRecyclerView extends FrameLayout {
 
         if (totalItemCount == 0) {
             return;
-        }
-
-        if (firstVisibleItemPosition + visibleItemCount >= totalItemCount) {
-            addLoadMore();
         }
 
         if (firstVisibleItemPosition + visibleItemCount + bufferItems > totalItemCount) {
@@ -430,7 +428,7 @@ public class RealmRecyclerView extends FrameLayout {
                         }
                         isRefreshing = true;
                     } else {
-                        if (onRefreshListener != null)
+                        if (onRefreshListener != null && !showShowLoadMore)
                             onRefreshListener.onBottomRefresh();
                     }
                 }

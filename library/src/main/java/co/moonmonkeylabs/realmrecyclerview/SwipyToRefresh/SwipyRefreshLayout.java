@@ -79,6 +79,7 @@ public class SwipyRefreshLayout extends ViewGroup {
     private float mInitialMotionY;
     private float mInitialDownY;
     private boolean mIsBeingDragged;
+    private boolean mCanSwipeBottom = true;
     private int mActivePointerId = INVALID_POINTER;
     // Whether this item is scaled up rather than clipped
     private boolean mScale;
@@ -808,6 +809,8 @@ public class SwipyRefreshLayout extends ViewGroup {
                     float overscrollTop;
                     switch (mDirection) {
                         case BOTTOM:
+                            if (!mCanSwipeBottom)
+                                return false;
                             overscrollTop = (mInitialMotionY - y) * DRAG_RATE;
                             break;
                         case TOP:
@@ -1064,6 +1067,10 @@ public class SwipyRefreshLayout extends ViewGroup {
             final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
             mActivePointerId = MotionEventCompat.getPointerId(ev, newPointerIndex);
         }
+    }
+
+    public void setCanSwipeBottom(boolean canSwipeBottom) {
+        mCanSwipeBottom = canSwipeBottom;
     }
 
     /**

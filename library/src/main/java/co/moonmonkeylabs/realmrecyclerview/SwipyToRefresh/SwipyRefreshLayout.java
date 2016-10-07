@@ -810,7 +810,7 @@ public class SwipyRefreshLayout extends ViewGroup {
                     switch (mDirection) {
                         case BOTTOM:
                             if (!mCanSwipeBottom)
-                                return false;
+                                return true;
                             overscrollTop = (mInitialMotionY - y) * DRAG_RATE;
                             break;
                         case TOP:
@@ -899,6 +899,8 @@ public class SwipyRefreshLayout extends ViewGroup {
                     float overscrollTop;
                     switch (mDirection) {
                         case BOTTOM:
+                            if (!mCanSwipeBottom)
+                                return true;
                             overscrollTop = (mInitialMotionY - y) * DRAG_RATE;
                             break;
                         case TOP:

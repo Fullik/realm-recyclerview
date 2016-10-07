@@ -407,7 +407,7 @@ public class MainActivity extends RealmBaseActivity {
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-                realmRecyclerView.disableShowLoadMore();
+                realmRecyclerView.removeLoadMoreAnimated();
             }
         };
         remoteItem.execute();

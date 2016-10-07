@@ -219,7 +219,7 @@ public class RealmRecyclerView extends FrameLayout {
     }
 
     public void removeLoadMoreAnimated() {
-        swipeRefreshLayout.setCanSwipeBottom(false);
+        swipeRefreshLayout.setCanSwipeBottom(true);
         ((RealmBasedRecyclerViewAdapter) recyclerView.getAdapter()).removeLoadMoreAnimated();
         disableShowLoadMore();
     }
@@ -229,7 +229,7 @@ public class RealmRecyclerView extends FrameLayout {
     }
 
     public void addLoadMore() {
-        swipeRefreshLayout.setCanSwipeBottom(true);
+        swipeRefreshLayout.setCanSwipeBottom(false);
         ((RealmBasedRecyclerViewAdapter) recyclerView.getAdapter()).addLoadMore();
     }
 

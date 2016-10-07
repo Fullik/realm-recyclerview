@@ -14,6 +14,8 @@ import android.view.ViewStub;
 import android.widget.FrameLayout;
 import com.tonicartos.superslim.LayoutManager;
 
+import co.moonmonkeylabs.realmrecyclerview.SwipyToRefresh.SwipyRefreshLayout;
+import co.moonmonkeylabs.realmrecyclerview.SwipyToRefresh.SwipyRefreshLayoutDirection;
 import io.realm.RealmBasedRecyclerViewAdapter;
 
 /**
@@ -26,6 +28,7 @@ public class RealmRecyclerView extends FrameLayout {
 
     public interface OnRefreshListener {
         void onRefresh();
+        void onBottomRefresh();
     }
 
     public interface OnLoadMoreListener {
@@ -38,7 +41,7 @@ public class RealmRecyclerView extends FrameLayout {
         LinearLayoutWithHeaders
     }
 
-    private SwipeRefreshLayout swipeRefreshLayout;
+    private SwipyRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private ViewStub emptyContentContainer;
     private RealmBasedRecyclerViewAdapter adapter;
@@ -54,6 +57,7 @@ public class RealmRecyclerView extends FrameLayout {
     private int gridWidthPx;
     private boolean swipeToDelete;
     private int bufferItems = 3;
+    private SwipyRefreshLayoutDirection swipeDirection;
 
     private GridLayoutManager gridManager;
     private int lastMeasuredWidth = -1;
@@ -101,7 +105,8 @@ public class RealmRecyclerView extends FrameLayout {
         inflate(context, R.layout.realm_recycler_view, this);
         initAttrs(context, attrs);
 
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.rrv_swipe_refresh_layout);
+        swipeRefreshLayout = (SwipyRefreshLayout) findViewById(R.id.rrv_swipe_refresh_layout);
+        swipeRefreshLayout.setDirection(swipeDirection);
         recyclerView = (RecyclerView) findViewById(R.id.rrv_recycler_view);
         emptyContentContainer = (ViewStub) findViewById(R.id.rrv_empty_content_container);
 
@@ -181,12 +186,6 @@ public class RealmRecyclerView extends FrameLayout {
         }
     }
 
-    /**
-     * Sets the orientation of the layout. {@link android.support.v7.widget.LinearLayoutManager}
-     * will do its best to keep scroll position.
-     *
-     * @param orientation {@link #HORIZONTAL} or {@link #VERTICAL}
-     */
     public void setOrientation(int orientation) {
         if(gridManager == null) {
             throw new IllegalStateException("Error init of GridLayoutManager");
@@ -212,6 +211,7 @@ public class RealmRecyclerView extends FrameLayout {
 
     public void enableShowLoadMore() {
         showShowLoadMore = true;
+        addLoadMore();
     }
 
     public void disableShowLoadMore() {
@@ -220,6 +220,7 @@ public class RealmRecyclerView extends FrameLayout {
 
     public void removeLoadMoreAnimated() {
         ((RealmBasedRecyclerViewAdapter) recyclerView.getAdapter()).removeLoadMoreAnimated();
+        disableShowLoadMore();
     }
 
     public void removeLoadMore() {
@@ -279,6 +280,10 @@ public class RealmRecyclerView extends FrameLayout {
 
         isRefreshable =
                 typedArray.getBoolean(R.styleable.RealmRecyclerView_rrvIsRefreshable, false);
+
+        swipeDirection = SwipyRefreshLayoutDirection.getFromInt(typedArray
+                .getInt(R.styleable.RealmRecyclerView_srl_direction, 0));
+
         emptyViewId =
                 typedArray.getResourceId(R.styleable.RealmRecyclerView_rrvEmptyLayoutId, 0);
         int typeValue = typedArray.getInt(R.styleable.RealmRecyclerView_rrvLayoutType, -1);
@@ -415,14 +420,19 @@ public class RealmRecyclerView extends FrameLayout {
         this.bufferItems = bufferItems;
     }
 
-    private SwipeRefreshLayout.OnRefreshListener recyclerViewRefreshListener =
-            new SwipeRefreshLayout.OnRefreshListener() {
+    private SwipyRefreshLayout.OnRefreshListener recyclerViewRefreshListener =
+            new SwipyRefreshLayout.OnRefreshListener() {
                 @Override
-                public void onRefresh() {
-                    if (!isRefreshing && onRefreshListener != null) {
-                        onRefreshListener.onRefresh();
+                public void onRefresh(SwipyRefreshLayoutDirection direction) {
+                    if (direction == SwipyRefreshLayoutDirection.TOP) {
+                        if (!isRefreshing && onRefreshListener != null) {
+                            onRefreshListener.onRefresh();
+                        }
+                        isRefreshing = true;
+                    } else {
+                        if (onRefreshListener != null)
+                            onRefreshListener.onBottomRefresh();
                     }
-                    isRefreshing = true;
                 }
             };
 }

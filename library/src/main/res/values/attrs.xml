@@ -12,5 +12,11 @@
         <attr name="rrvGridLayoutItemWidth" format="dimension"/>
         <attr name="rrvHeaderColumnName" format="string"/>
         <attr name="rrvSwipeToDelete" format="boolean"/>
+        <attr name="srl_direction">
+            <enum name="top" value="0" />
+            <enum name="bottom" value="1" />
+            <enum name="both" value="2" />
+        </attr>
     </declare-styleable>
+
 </resources>

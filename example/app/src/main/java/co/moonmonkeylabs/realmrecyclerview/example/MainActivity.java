@@ -97,6 +97,11 @@ public class MainActivity extends RealmBaseActivity {
                     public void onRefresh() {
                         asyncRefreshAllQuotes();
                     }
+
+                    @Override
+                    public void onBottomRefresh() {
+
+                    }
                 }
         );
 

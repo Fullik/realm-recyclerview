@@ -259,10 +259,10 @@ public class SwipyRefreshLayout extends ViewGroup {
         setEnabled(a.getBoolean(0, true));
 
         TypedArray typedArray =
-                context.obtainStyledAttributes(attrs, R.styleable.RealmRecyclerView);
+                context.obtainStyledAttributes(attrs, R.styleable.SwipyRefreshLayout);
         SwipyRefreshLayoutDirection direction
                 = SwipyRefreshLayoutDirection.getFromInt(typedArray.getInt(R.styleable.SwipyRefreshLayout_srlmain_direction, 0));
-        
+
         typedArray.recycle();
         a.recycle();
         if (direction != SwipyRefreshLayoutDirection.BOTH) {
